@@ -5,11 +5,12 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "IdlePos", story: "[Self] Return to [StartPos] With [MoveSpeed]", category: "Action", id: "8abf6ba0006923b7dc68e9c6b60bc62f")]
-public partial class IdlePosAction : Action
+[NodeDescription(name: "Chase", story: "[Self] Chase [Player] In [DetectRange] With [MoveSpeed]", category: "Action", id: "e09846ff67d4cead9909bde0fb987c20")]
+public partial class ChaseAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Self;
-    [SerializeReference] public BlackboardVariable<Transform> StartPos;
+    [SerializeReference] public BlackboardVariable<GameObject> Player;
+    [SerializeReference] public BlackboardVariable<float> DetectRange;
     [SerializeReference] public BlackboardVariable<float> MoveSpeed;
     protected override Status OnStart()
     {
@@ -18,11 +19,11 @@ public partial class IdlePosAction : Action
 
     protected override Status OnUpdate()
     {
-        Vector3 direction = (StartPos.Value.position - Self.Value.transform.position).normalized;
+        Vector3 direction = (Player.Value.transform.position - Self.Value.transform.position).normalized;
         Vector3 nextPos = new Vector3(Self.Value.transform.position.x + direction.x * MoveSpeed * Time.deltaTime, Self.Value.transform.position.y);
         Self.Value.transform.position = nextPos;
 
-        return Vector2.Distance(Self.Value.transform.position, StartPos.Value.position) == 0 ? Status.Success : Status.Failure;
+        return Vector2.Distance(Self.Value.transform.position, Player.Value.transform.position) > DetectRange ? Status.Success : Status.Failure;
     }
 
     protected override void OnEnd()

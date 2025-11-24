@@ -19,7 +19,8 @@ public partial class DetectAction : Action
 
     protected override Status OnUpdate()
     {
-        return Status.Success;
+        float distance = Vector2.Distance(Self.Value.transform.position, Player.Value.transform.position);
+        return distance <= DetectRange.Value ? Status.Success : Status.Failure ;
     }
 
     protected override void OnEnd()
