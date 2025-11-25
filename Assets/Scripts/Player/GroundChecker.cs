@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GroundChecker : MonoBehaviour
 {
-    [SerializeField] PlayerMovement player;
+    [SerializeField] PlayerStatePattern player;
 
     public float _coyoteTime;
 
@@ -16,6 +16,9 @@ public class GroundChecker : MonoBehaviour
         {
             _isFloat = false;
             player._isGrounded = true;
+            player._anim.SetBool("isGrounded", true);
+            player._isJump = false;
+            player._anim.SetBool("isJump", false);
             _coyoteTime = 0.2f;
         }
     }
@@ -24,6 +27,9 @@ public class GroundChecker : MonoBehaviour
         if (collision.gameObject.layer == 6)
         {
             _isFloat = true;
+            player._anim.SetBool("isGrounded", false);
+            player._isJump = true;
+            player._anim.SetBool("isJump", true);
         }
     }
     private void Update()

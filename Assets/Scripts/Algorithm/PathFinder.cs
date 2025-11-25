@@ -27,6 +27,7 @@ public class PathFinder : MonoBehaviour
     public Vector2Int _startPos, _targetPos;
     [SerializeField] GameObject Enemy;
     [SerializeField] GameObject Player;
+    int _index = 0;
 
     //대상을 향해 이동할 경로.
     public List<Node> _path = new List<Node>();
@@ -40,21 +41,29 @@ public class PathFinder : MonoBehaviour
     //방문할 노드의 리스트 OpenList와 방문한 노드의 리스트 ClosedList
     List<Node> OpenList, ClosedList;
 
+    //시작 시에 시작점과 종착점 갱신, 해당 경로 탐색
     private void Start()
     {
         Init();
         PathFinding();
     }
+
+    /// <summary>
+    /// 시작점과 종착점을 정해진 대상으로 지정하는 메서드입니다.
+    /// </summary>
     public void Init()
     {
-        _startPos = new Vector2Int((int)Enemy.transform.position.x, (int)Enemy.transform.position.y);
-        _targetPos = new Vector2Int((int)Player.transform.position.x, (int)Player.transform.position.y + 1);
+        _startPos = new Vector2Int((int)Enemy.transform.position.x, (int)Enemy.transform.position.y + 1);
+        _targetPos = new Vector2Int((int)Player.transform.position.x, (int)Player.transform.position.y);
     }
+
+    //플레이어의 움직임에 따라 대상의 위치 정보를 계속 갱신합니다.
     private void FixedUpdate()
     {
         Init();
         PathFinding();
-
+        if(_path.Count > 0)
+            EnemyChase();
     }
     /// <summary>
     /// 받아온 정보들을 기준으로 목적지까지 이동하기 위한 경로를 탐색하는 메서드입니다.
@@ -154,6 +163,31 @@ public class PathFinder : MonoBehaviour
 
 
     }
+
+    void EnemyChase()
+    {
+        if (_path.Count > 0)
+        {
+            
+            Rigidbody2D rigid = Enemy.GetComponent<Rigidbody2D>();
+            Vector2 EnemyPos = new Vector2(Enemy.transform.position.x, Enemy.transform.position.y);
+            Vector2 direction = _path[_index].Pos - EnemyPos;
+            if (direction.magnitude > 0.1f)
+            {
+                Vector2 velocity = direction.normalized * 2f;
+                rigid.linearVelocity = velocity;
+            }
+            else
+            {
+                _index++;
+            }
+        }
+    }
+    /// <summary>
+    /// OpenList에 특정 좌표의 노드를 추가하기 위한 메서드입니다.
+    /// </summary>
+    /// <param name="CheckX">추가할 노드의 X좌표</param>
+    /// <param name="CheckY">추가할 노드의 Y좌표</param>
     void OpenListAdd(int CheckX, int CheckY)
     {
         //상하좌우 범위를 벗어나지 않고, 밟을 수 있는 지역이면서, 닫힌 리스트에 없을 때 시행할 함수
