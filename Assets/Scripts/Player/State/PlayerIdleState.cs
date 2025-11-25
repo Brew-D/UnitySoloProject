@@ -24,14 +24,15 @@ public class PlayerIdleState : IPlayerState
     }
     private void Update()
     {
-        _isGround = _player.IsGrounded;
-        _moveInput = _player.MoveInput;
-        OnUpdate();
+
     }
     public void OnEnter()
     {
-        _player.MoveChecker(false);
+        Debug.Log("정지 상태 인식 완료");
         _player.JumpChecker(false);
+        _player.MoveChecker(false);
+        _player.DashChecker(false);
+        _player.AttackChecker(false);
     }
 
     public void OnExit()
@@ -41,13 +42,22 @@ public class PlayerIdleState : IPlayerState
 
     public void OnUpdate()
     {
-        if (_isGround != true)
+        _isGround = _player.IsGrounded;
+        _moveInput = _player.MoveInput;
+        if (_isGround == false)
         {
+            Debug.Log("땅에서 떨어짐");
             _player.SetState(new PlayerJumpState(_player));
         }
-        else if (_moveInput.x != 0)
+        else if (_isGround == true && _player._isMoving)
         {
+            Debug.Log("움직임");
             _player.SetState(new PlayerRunState(_player));
+        }
+        else if (_player._isAttack == true)
+        {
+            Debug.Log("공격 입력 인식");
+            _player.SetState(new PlayerAttackState(_player));
         }
     }
 }

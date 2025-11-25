@@ -24,11 +24,14 @@ public class PlayerJumpState : IPlayerState
 
     public void OnEnter()
     {
+        Debug.Log("체공 상태 인식 완료");
         _player.JumpChecker(true);
+        _player.DashChecker(false);
+        _player.AttackChecker(false);
     }
     private void Update()
     {
-        OnUpdate();
+
     }
 
     public void OnUpdate()
@@ -42,11 +45,18 @@ public class PlayerJumpState : IPlayerState
 
         if (_isGround == true && _moveInput.x != 0)
         {
+            Debug.Log("착지 후 이동중");
             _player.SetState(new PlayerRunState(_player));
         }
         else if (_isGround == true && _moveInput.x == 0)
         {
+            Debug.Log("착지 후 대기중");
             _player.SetState(new PlayerIdleState(_player));
+        }
+        else if (_player._isDash)
+        {
+            Debug.Log("질주 발동");
+            _player.SetState(new PlayerDashState(_player));
         }
     }
 
