@@ -44,6 +44,12 @@ public class PathFinder : MonoBehaviour
     //시작 시에 시작점과 종착점 갱신, 해당 경로 탐색
     private void Start()
     {
+        if (Enemy == null)
+            Enemy = gameObject;
+        if (Player == null)
+        {
+            Player = GameObject.Find("Astar_Target");
+        }
         Init();
         PathFinding();
     }

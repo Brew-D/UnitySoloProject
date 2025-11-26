@@ -64,11 +64,19 @@ public class PlayerStatePattern : MonoBehaviour
     {
         SetState(new PlayerIdleState(this));
     }
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == 13)
+        {
+            GameManager.Instance._savedSoldier++;
+            collision.gameObject.SetActive(false);
+        }
+    }
     private void FixedUpdate()
     {
         Vector2 velocity = _rigid.linearVelocity;
-        velocity.x = _moveInput.x * _moveSpeed;
+        if(!_isDash)
+            velocity.x = _moveInput.x * _moveSpeed;
         if (_moveInput.x > 0)
             gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         else if (_moveInput.x < 0)
@@ -90,7 +98,7 @@ public class PlayerStatePattern : MonoBehaviour
     }
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        if(_isAttack == false && _isHit == false && _isDash == false)
+        if(_isAttack == false && _isHit == false)
             _moveInput = ctx.ReadValue<Vector2>();
     }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerDashState : IPlayerState
 {
@@ -8,7 +9,7 @@ public class PlayerDashState : IPlayerState
     private bool _isGround;
 
     //대시 지속시간
-    private float duration = 0.5f;
+    private float duration = 0.2f;
     //시간 체크용
     private float timeChecker = 0;
 
@@ -22,7 +23,10 @@ public class PlayerDashState : IPlayerState
     {
         _player = player;
         _moveSpeed = _player._moveSpeed;
-        _moveInput = _player._moveInput;
+        if (_player._moveInput.x < 0)
+            _moveInput = new Vector2(-1, 0);
+        else if (_player._moveInput.x > 0)
+            _moveInput = new Vector2(1, 0);
         _isGround = _player._isGrounded;
     }
 
@@ -59,12 +63,12 @@ public class PlayerDashState : IPlayerState
     {
         timeChecker += Time.deltaTime;
         //플레이어의 움직임 입력과 바닥 접촉 여부를 확인합니다.
-        _moveInput = _player.MoveInput;
         _isGround = _player.IsGrounded;
         //질주 상태가 유지될 동안 이동하는 속도를 더 높게 적용시킵니다.
         Dash();
         if (timeChecker >= duration)
         {
+            _moveSpeed = _player._moveSpeed;
             if (_isGround == false)
             {
                 Debug.Log("땅에서 떨어짐");
@@ -85,16 +89,19 @@ public class PlayerDashState : IPlayerState
 
     public void Dash()
     {
-        if (timeChecker < duration)
+        if (timeChecker < duration && _player._isDash)
         {
-            _player._moveSpeed = _moveSpeed * 2f;
-            _player._rigid.gravityScale = 0;
+            _moveSpeed = _player._moveSpeed * 4f;
+            _player._rigid.gravityScale = 1;
+            Vector2 velocity = _player._rigid.linearVelocity;
+            velocity.x = _moveInput.x * _moveSpeed;
+            _player._rigid.linearVelocity = velocity;
             if (_isGround == false)
                 _player._groundChecker._coyoteTime = 0.4f;
         }
         else
         {
-            _player._moveSpeed = _moveSpeed;
+            _moveSpeed = _player._moveSpeed;
             _player._rigid.gravityScale = 1;
             _player._isDash = false;
         }

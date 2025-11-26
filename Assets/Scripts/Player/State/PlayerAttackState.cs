@@ -25,6 +25,7 @@ public class PlayerAttackState : IPlayerState
         _isGround = _player._isGrounded;
         _attackRange = _player._attackRange;
         _currentAttackDuration = _firstAttackDuration;
+        _attackRange.enabled = true;
     }
 
     public void OnEnter()
@@ -52,9 +53,11 @@ public class PlayerAttackState : IPlayerState
                 {
                     case 0.58f:
                         _currentAttackDuration = _secondAttackDuration;
+                        _attackRange.enabled = true;
                         break;
                     case 0.66f:
                         _currentAttackDuration = _firstAttackDuration;
+                        _attackRange.enabled = true;
                         break;
                 }
             }
