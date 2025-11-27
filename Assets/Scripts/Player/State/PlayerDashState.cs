@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerDashState : IPlayerState
 {
@@ -13,7 +12,6 @@ public class PlayerDashState : IPlayerState
     //시간 체크용
     private float timeChecker = 0;
 
-    private bool isActivate = false;
 
     /// <summary>
     /// 플레이어의 상태패턴 관리용 코드를 받아 해당 코드에서 필요한 내용을 가져옵니다.
@@ -35,11 +33,9 @@ public class PlayerDashState : IPlayerState
     /// </summary>
     public void OnEnter()
     {
-        Debug.Log("질주 상태 인식 완료");
         _player.MoveChecker(true);
         _player.DashChecker(true);
         _player.AttackChecker(false);
-        isActivate = true;
         timeChecker = 0;
     }
 
@@ -71,18 +67,19 @@ public class PlayerDashState : IPlayerState
             _moveSpeed = _player._moveSpeed;
             if (_isGround == false)
             {
-                Debug.Log("땅에서 떨어짐");
                 _player.SetState(new PlayerJumpState(_player));
             }
             else if (_isGround == true && _player._isMoving)
             {
-                Debug.Log("착지 후 이동중");
                 _player.SetState(new PlayerIdleState(_player));
             }
             else if (_isGround == true && !_player._isMoving)
             {
-                Debug.Log("착지 후 대기중");
                 _player.SetState(new PlayerIdleState(_player));
+            }
+            else if (_player._isHit == true)
+            {
+                _player.SetState(new PlayerHitState(_player));
             }
         }
     }
@@ -105,5 +102,7 @@ public class PlayerDashState : IPlayerState
             _player._rigid.gravityScale = 1;
             _player._isDash = false;
         }
+        if (_player._health < 0.1)
+            _player._anim.SetFloat("Health", 0);
     }
 }

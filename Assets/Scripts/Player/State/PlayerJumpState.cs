@@ -24,7 +24,6 @@ public class PlayerJumpState : IPlayerState
 
     public void OnEnter()
     {
-        Debug.Log("체공 상태 인식 완료");
         _player.JumpChecker(true);
         _player.DashChecker(false);
         _player.AttackChecker(false);
@@ -43,21 +42,24 @@ public class PlayerJumpState : IPlayerState
         else
             previousCoords = _player.transform.position.y;
 
-        if (_isGround == true && _moveInput.x != 0)
+        if (_player._isDash)
         {
-            Debug.Log("착지 후 이동중");
+            _player.SetState(new PlayerDashState(_player));
+        }
+        else if (_isGround == true && _moveInput.x != 0)
+        {
             _player.SetState(new PlayerRunState(_player));
         }
         else if (_isGround == true && _moveInput.x == 0)
         {
-            Debug.Log("착지 후 대기중");
             _player.SetState(new PlayerIdleState(_player));
         }
-        else if (_player._isDash)
+        else if (_player._isHit == true)
         {
-            Debug.Log("질주 발동");
-            _player.SetState(new PlayerDashState(_player));
+            _player.SetState(new PlayerHitState(_player));
         }
+        if (_player._health < 0.1)
+            _player._anim.SetFloat("Health", 0);
     }
 
     public void OnExit()

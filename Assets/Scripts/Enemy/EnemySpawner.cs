@@ -2,24 +2,14 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] GameObject _enemyPrefab;
-    [SerializeField] int _poolSize = 5;
-    [SerializeField] float _health = 4;
-    [SerializeField] float _spawnDelay = 3;
+    [SerializeField] GameObject _enemyPrefab; // 생성할 적 프리팹입니다.
 
-    public bool _isGameStart = false;
-    private float timeChecker;
-    private void Update()
+    /// <summary>
+    /// 입력받은 좌표에 적을 생성합니다.
+    /// </summary>
+    /// <param name="position">적을 생성할 좌표.</param>
+    public void SpawnEnemy(Vector3 position)
     {
-        if(_isGameStart)
-        timeChecker += Time.deltaTime;
-    }
-    public void SpawnEnemy(Transform position)
-    {
-        if (timeChecker > _spawnDelay)
-        {
-            timeChecker = 0;
-            Instantiate(_enemyPrefab, position);
-        }
+        Instantiate(_enemyPrefab, position, Quaternion.identity);
     }
 }

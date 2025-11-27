@@ -17,7 +17,6 @@ public class PlayerRunState : IPlayerState
 
     public void OnEnter()
     {
-        Debug.Log("이동 상태 인식 완료");
         _player.MoveChecker(true);
         _player.JumpChecker(false);
         _player.AttackChecker(false);
@@ -38,25 +37,27 @@ public class PlayerRunState : IPlayerState
     {
         _moveInput = _player.MoveInput;
         _isGround = _player.IsGrounded;
-        if (_isGround == false)
+        if (_player._isDash)
         {
-            Debug.Log("땅에서 떨어짐");
+            _player.SetState(new PlayerDashState(_player));
+        }
+        else if (_isGround == false)
+        {
             _player.SetState(new PlayerJumpState(_player));
         }
         else if (_isGround == true && !_player._isMoving)
         {
-            Debug.Log("움직임 멈춤");
             _player.SetState(new PlayerIdleState(_player));
-        }
-        else if (_player._isDash)
-        {
-            Debug.Log("질주 발동");
-            _player.SetState(new PlayerDashState(_player));
         }
         else if (_player._isAttack == true)
         {
-            Debug.Log("공격 입력 인식");
             _player.SetState(new PlayerAttackState(_player));
         }
+        else if (_player._isHit == true)
+        {
+            _player.SetState(new PlayerHitState(_player));
+        }
+        if (_player._health < 0.1)
+            _player._anim.SetFloat("Health", 0);
     }
 }

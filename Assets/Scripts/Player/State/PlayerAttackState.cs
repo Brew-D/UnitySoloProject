@@ -65,20 +65,19 @@ public class PlayerAttackState : IPlayerState
             {
                 if (_isGround == false)
                 {
-                    Debug.Log("¶¥¿¡¼­ ¶³¾îÁü");
                     _player.SetState(new PlayerJumpState(_player));
                 }
                 else if (_isGround == true && _player._isMoving)
                 {
-                    Debug.Log("ÂøÁö ÈÄ ÀÌµ¿Áß");
-                    _player.SetState(new PlayerIdleState(_player));
+                    _player.SetState(new PlayerRunState(_player));
                 }
                 else if (_isGround == true && !_player._isMoving)
                 {
-                    Debug.Log("ÂøÁö ÈÄ ´ë±âÁß");
                     _player.SetState(new PlayerIdleState(_player));
                 }
             }
         }
+        if (_player._health < 0.1)
+            _player._anim.SetFloat("Health", 0);
     }
 }

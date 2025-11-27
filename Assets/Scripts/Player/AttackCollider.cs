@@ -19,7 +19,6 @@ public class AttackCollider : MonoBehaviour
             EnemyStatePattern enemy = collision.GetComponent<EnemyStatePattern>();
 
             enemy.GetHit();
-            Debug.Log("타격 성공");
             _hitTimePassed = true;
         }
     }
@@ -37,5 +36,11 @@ public class AttackCollider : MonoBehaviour
             _boxCollider.enabled = false;
             _hitTimePassed = false;
         }
+    }
+
+    public void TimeFreeze()
+    {
+        GameManager.Instance.Credit();
+        Time.timeScale = 0;
     }
 }

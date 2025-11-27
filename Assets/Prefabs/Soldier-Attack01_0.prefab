@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8864145202889039505}
   - component: {fileID: 5644966466290014973}
   - component: {fileID: -2561273873256341212}
+  - component: {fileID: 2886940633097048147}
   m_Layer: 13
   m_Name: Soldier-Attack01_0
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6671808291224904940}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.8, y: 4.94, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -151,3 +152,15 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0001436472, y: 0.12519199}
   m_Size: {x: 0.75016, y: 1.1252438}
   m_Direction: 0
+--- !u!114 &2886940633097048147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6671808291224904940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80525a0ab410b1543a7066d5fcea1e08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Soldier
